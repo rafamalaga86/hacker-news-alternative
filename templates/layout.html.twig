@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Rafael García Doblas">
+
+    <title>Hacker News Alternative</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" alt="Bootstrap stylesheet"/>
+
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('css/styles.css') }}" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+
+    <div class="navbar">
+      <div class="container d-flex justify-content-end">
+          <a href="/" class="navbar-brand">Hacker News by Rafael</a>
+      </div>
+    </div>
+    <main class="container">
+      {% block main %}{% endblock %}
+    </main>
+    <footer class="text-muted">
+      <div class="container">
+        <p class="footer-joke">Hola k ase</p>
+      </div>
+    </footer>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/masonry.js') }}"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
+  </body>
+</html>
