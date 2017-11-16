@@ -1,17 +1,4 @@
 
-
-I had an elegant solution recursive
-
-
-sacar $maxConcurrentRequests = 150;
-
-
-
-disabling issues in hacker news official repo
-
-
-poner un base url comun
-
 Well, here it is my solution. First of all, I would like to tell you guys that I don't have all the time free that I wish, because I have a 40 hours job and other obligations, and was a challenge to take the hours needed to do this in one week, as you requested. 
 
 I think I did a good job and tried to show my skills in every part of the project. But there is still much I wanted to do and I don't have time, so I will explain it in here.
@@ -35,4 +22,15 @@ I don't have time enough to do that. I am confident that you know that is probab
 4. Handle Bootstrap and jQuery with Bower, the package frontend package manager.
 
 I might be forgetting something, but thats basically it. In the same way, if you expected to see anything mention before, just please let me know (and give me some days) and I'd happily do it.
+
+
+Regarding the HackerNews API, it was a bit tricky requesting information, because many requests needs to be done at the same time. I made that happened as concurrent as I could, but had to limite it a little bit because it was exceding the capacities of the php built-in server. 
+
+- I had tweak the server, but I am not applying for dev-ops, but a software dev, so I tried to sort the limitations with PHP. 
+
+- Also would have been easy to do most of the requests in the frontend, because you can start showing infromation as soon as you get it with callbacks, but the task I received said I have to do it with Silex.
+
+- Could have implement some type of caching for the requests, or even having a cron job storing new items of HackerNews. I saw these solutions exeding the porpuse of this exercise.
+
+Also I have experienced the Hacker News Api not accepting requests if I tried to do to many concurrent requests. So the page is a little bit slow, but not much.
 

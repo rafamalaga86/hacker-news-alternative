@@ -1,6 +1,7 @@
 /vendor
 /phpunit.xml
 /build
+/.idea
 .DS_Store
 /var/cache/*
 /var/logs/*

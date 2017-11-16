@@ -6,10 +6,13 @@ ini_set('display_errors', 1);
 require_once __DIR__.'/../vendor/autoload.php';
 
 $app = require __DIR__.'/../src/app.php';
-require __DIR__.'/../config/dev.php';
+require __DIR__.'/../config/config.php';
+
+
 require_once __DIR__.'/../src/ItemNode.php';
 require_once __DIR__.'/../src/HackerNewsClient.php';
 require_once __DIR__.'/../src/ItemMapper.php';
+require_once __DIR__.'/../src/ControllerHelper.php';
 
 require __DIR__.'/../src/controllers.php';
 

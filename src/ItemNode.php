@@ -4,6 +4,9 @@ namespace HackerNewsGTD;
 
 use Carbon\Carbon;
 
+/**
+ * Class ItemNode
+ */
 class ItemNode
 {
 
@@ -11,6 +14,7 @@ class ItemNode
      * @var null|int
      */
     private $id;
+
     /**
      * @var string
      */
@@ -52,17 +56,22 @@ class ItemNode
     private $children = [];
 
 
-    public function __construct($json)
+    /**
+     * ItemNode constructor.
+     * @param array $itemArray Assoc array given
+     */
+    public function __construct($itemArray)
     {
-        $this->id       = (int) $json['id'];
-        $this->author   = $json['by'];
-        $this->text     = array_key_exists('text', $json) ? $json['text'] : null;
-        $this->title    = array_key_exists('title', $json) ? $json['title'] : null;
-        $this->score    = array_key_exists('score', $json) ? (int) $json['score'] : null;
-        $this->time     = Carbon::createFromTimestamp((int) $json['time']);
-        $this->url      = array_key_exists('url', $json) ? $json['url'] : null;
-        $this->itemType = $json['type'];
+        $this->id       = (int) $itemArray['id'];
+        $this->author   = $itemArray['by'];
+        $this->text     = array_key_exists('text', $itemArray) ? $itemArray['text'] : null;
+        $this->title    = array_key_exists('title', $itemArray) ? $itemArray['title'] : null;
+        $this->score    = array_key_exists('score', $itemArray) ? (int) $itemArray['score'] : null;
+        $this->time     = Carbon::createFromTimestamp((int) $itemArray['time']);
+        $this->url      = array_key_exists('url', $itemArray) ? $itemArray['url'] : null;
+        $this->itemType = $itemArray['type'];
     }
+
 
     /**
      * Get the item id
@@ -73,6 +82,7 @@ class ItemNode
         return $this->id;
     }
 
+
     /**
      * Set the item id
      * @param int|string $id
@@ -81,6 +91,7 @@ class ItemNode
     {
         $this->id = $id;
     }
+
 
     /**
      * Get the author
@@ -91,6 +102,7 @@ class ItemNode
         return $this->author;
     }
 
+
     /**
      * Set the author
      * @param string $author
@@ -99,6 +111,7 @@ class ItemNode
     {
         $this->author = $author;
     }
+
 
     /**
      * Get the text of the item
@@ -109,6 +122,7 @@ class ItemNode
         return $this->text;
     }
 
+
     /**
      * Set text of the item
      * @param string $text
@@ -117,6 +131,7 @@ class ItemNode
     {
         $this->text = $text;
     }
+
 
     /**
      * Get the title of the item
@@ -127,6 +142,7 @@ class ItemNode
         return $this->title;
     }
 
+
     /**
      * Set title of the item
      * @param string $title
@@ -135,6 +151,7 @@ class ItemNode
     {
         $this->title = $title;
     }
+
 
     /**
      * Get the time
@@ -145,6 +162,7 @@ class ItemNode
         return $this->time;
     }
 
+
     /**
      * Set the time
      * @param int $time
@@ -153,6 +171,7 @@ class ItemNode
     {
         $this->time = new Carbon($time);
     }
+
 
     /**
      * Get the score
@@ -163,6 +182,7 @@ class ItemNode
         return $this->score;
     }
 
+
     /**
      * Set the score
      * @param int $score
@@ -171,6 +191,7 @@ class ItemNode
     {
         $this->score = (int) $score;
     }
+
 
     /**
      * Get the itemType
@@ -181,6 +202,7 @@ class ItemNode
         return $this->itemType;
     }
 
+
     /**
      * Set the itemType
      * @param string $itemType
@@ -189,6 +211,7 @@ class ItemNode
     {
         $this->itemType = $itemType;
     }
+
 
     /**
      * Get the url of the entry
@@ -199,6 +222,7 @@ class ItemNode
         return $this->url;
     }
 
+
     /**
      * Set url of the item
      * @param string $url
@@ -208,30 +232,41 @@ class ItemNode
         $this->url = $url;
     }
 
+
     /**
      * Get the time in human difference from now
-     * @return Carbon|null
+     * @return string
      */
     public function getTimeDiffForHumans()
     {
         return $this->time->diffForHumans();
     }
 
+
+    /**
+     * Get nodes children of this node
+     * @return array|null
+     */
     public function getChildren()
     {
         return $this->children;
     }
 
+
+    /**
+     * Add a child to this node
+     * @param ItemNode $child the ItemNode to attach to this as a child
+     */
     public function addChild(ItemNode $child)
     {
         $this->children[] = $child;
     }
 
-    public function dropChildren(ItemNode $child)
-    {
-        $this->children = [];
-    }
 
+    /**
+     * Count the nodes in this tree
+     * @return int
+     */
     public function countNodes()
     {
         $count = 1;

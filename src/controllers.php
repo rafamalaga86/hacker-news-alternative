@@ -2,20 +2,13 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use HackerNewsGTD\ControllerHelper;
 
-use GuzzleHttp\Client as HttpClient;
-
-//Request::setTrustedProxies(array('127.0.0.1'));
-
-// Common code
-$itemMapper = new ItemMapper($app['baseUri']);
+// Request::setTrustedProxies(array('127.0.0.1'));
 
 // The home page
-$app->get('/', function () use ($app, $itemMapper) {
-    $trees = $itemMapper->fetchTopStories($app['rootsToFech']);
+$app->get('/', function () use ($app) {
+    $trees = $app['mapper.item']->fetchTopStories($app['rootsToFech']);
 
     return $app['twig']->render('rows.html.twig', [
         'trees' => $trees,
@@ -26,13 +19,12 @@ $app->get('/', function () use ($app, $itemMapper) {
 
 
 // Delivers the main page with the top stories
-$app->get('/news', function (Request $request) use ($app, $itemMapper) {
-    // Calculate the offset from the page sent by query string
-    $page = $request->get('p');
-    $page = is_numeric($page) && (int) $page > 0 ? (int) $page : 1;
-    $offset = $app['rootsToFech'] * ($page - 1);
+$app->get('/news', function (Request $request) use ($app) {
+    // Calculate the offset from the page sent by query string and fetch the tree
+    $page   = $request->get('p');
+    $offset = ControllerHelper::calculateOffset($page, $app['rootsToFech']);
 
-    $trees = $itemMapper->fetchTopStories($app['rootsToFech'], $offset);
+    $trees = $app['mapper.item']->fetchTopStories($app['rootsToFech'], $offset);
 
     return $app['twig']->render('rows.html.twig', [
         'trees' => $trees,
@@ -41,13 +33,12 @@ $app->get('/news', function (Request $request) use ($app, $itemMapper) {
 });
 
 // Delivers the main page with the newst stories
-$app->get('/newest', function (Request $request) use ($app, $itemMapper) {
-    // Calculate the offset from the page sent by query string
-    $page = $request->get('p');
-    $page = is_numeric($page) && (int) $page > 0 ? (int) $page : 1;
-    $offset = $app['rootsToFech'] * ($page - 1);
+$app->get('/newest', function (Request $request) use ($app) {
+    // Calculate the offset from the page sent by query string and fetch the tree
+    $page   = $request->get('p');
+    $offset = ControllerHelper::calculateOffset($page, $app['rootsToFech']);
 
-    $trees = $itemMapper->fetchNewestStories($app['rootsToFech'], $offset);
+    $trees = $app['mapper.item']->fetchNewestStories($app['rootsToFech'], $offset);
 
     return $app['twig']->render('rows.html.twig', [
         'trees' => $trees,
@@ -57,13 +48,11 @@ $app->get('/newest', function (Request $request) use ($app, $itemMapper) {
 
 
 // Delivers ask main page
-$app->get('/ask', function (Request $request) use ($app, $itemMapper) {
-    // Calculate the offset from the page sent by query string
-    $page = $request->get('p');
-    $page = is_numeric($page) && (int) $page > 0 ? (int) $page : 1;
-    $offset = $app['rootsToFech'] * ($page - 1);
-
-    $trees = $itemMapper->fetchAskStories($app['rootsToFech'], $offset);
+$app->get('/ask', function (Request $request) use ($app) {
+    // Calculate the offset from the page sent by query string and fetch the tree
+    $page   = $request->get('p');
+    $offset = ControllerHelper::calculateOffset($page, $app['rootsToFech']);
+    $trees = $app['mapper.item']->fetchAskStories($app['rootsToFech'], $offset);
 
     return $app['twig']->render('rows.html.twig', [
         'trees' => $trees,
@@ -73,13 +62,11 @@ $app->get('/ask', function (Request $request) use ($app, $itemMapper) {
 
 
 // Delivers jobs main page
-$app->get('/jobs', function (Request $request) use ($app, $itemMapper) {
-    // Calculate the offset from the page sent by query string
-    $page = $request->get('p');
-    $page = is_numeric($page) && (int) $page > 0 ? (int) $page : 1;
-    $offset = $app['rootsToFech'] * ($page - 1);
-
-    $trees = $itemMapper->fetchJobs($app['rootsToFech'], $offset);
+$app->get('/jobs', function (Request $request) use ($app) {
+    // Calculate the offset from the page sent by query string and fetch the tree
+    $page   = $request->get('p');
+    $offset = ControllerHelper::calculateOffset($page, $app['rootsToFech']);
+    $trees = $app['mapper.item']->fetchJobs($app['rootsToFech'], $offset);
 
     return $app['twig']->render('rows.html.twig', [
         'trees' => $trees,
@@ -89,13 +76,11 @@ $app->get('/jobs', function (Request $request) use ($app, $itemMapper) {
 
 
 // Delivers Shows main page
-$app->get('/show', function (Request $request) use ($app, $itemMapper) {
-    // Calculate the offset from the page sent by query string
-    $page = $request->get('p');
-    $page = is_numeric($page) && (int) $page > 0 ? (int) $page : 1;
-    $offset = $app['rootsToFech'] * ($page - 1);
-
-    $trees = $itemMapper->fetchShows($app['rootsToFech'], $offset);
+$app->get('/show', function (Request $request) use ($app) {
+    // Calculate the offset from the page sent by query string and fetch the tree
+    $page   = $request->get('p');
+    $offset = ControllerHelper::calculateOffset($page, $app['rootsToFech']);
+    $trees  = $app['mapper.item']->fetchShows($app['rootsToFech'], $offset);
 
     return $app['twig']->render('rows.html.twig', [
         'trees' => $trees,
@@ -105,8 +90,8 @@ $app->get('/show', function (Request $request) use ($app, $itemMapper) {
 
 
 // Delivers a specific item page along all the comments
-$app->get('/item/{id}', function ($id) use ($app, $itemMapper) {
-    $tree = $itemMapper->fetchArrayItemsTree($id);
+$app->get('/item/{id}', function ($id) use ($app) {
+    $tree = $app['mapper.item']->fetchArrayItemsTree($id);
 
     return $app['twig']->render('tree-rows.html.twig', [
         'trees' => [$tree[0]],
@@ -120,7 +105,7 @@ $app->get('/item/{id}', function ($id) use ($app, $itemMapper) {
 
 $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     if ($app['debug']) {
-        return;
+        return null;
     }
 
     // 404.html, or 40x.html, or 4xx.html, or error.html

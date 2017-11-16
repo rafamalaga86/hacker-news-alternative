@@ -1,87 +1,31 @@
 <?php
 
-use HackerNewsGTD\HackerNewsClient;
-use HackerNewsGTD\ItemNode;
-use Tree\Node\Node;
+namespace HackerNewsGTD;
 
 class ItemMapper
 {
+    /**
+     * @var HackerNewsClient
+     */
     private $client;
 
-    public function __construct($baseUri)
-    {
-        $this->client = new HackerNewsClient($baseUri);
-    }
 
     /**
-     * Make a tree based on hacker news json
-     * @param $id the id of the item
-     *
-     * @return Node|null
+     * @param HackerNewsClient $client
      */
-    public function fetchItemTree($id)
+    public function __construct(HackerNewsClient $client)
     {
-        try {
-            $jsonItem = $this->client->requestItem($id);
-        } catch (Exception $e) {
-            // For any reason the status code wasnt 200
-            // Log what happened. And then continue with tree building
-            return null;
-        }
-
-        // Check the item is not soft deleted in HackerNews
-        if (array_key_exists('deleted', $jsonItem) && $jsonItem['deleted']) {
-            return null;
-        }
-
-        $item = new ItemNode($jsonItem);
-        $tree = new Node($item);
-
-        if (array_key_exists('kids', $jsonItem)) {
-            foreach ($jsonItem['kids'] as $id) {
-                $node = $this->getItemTree($id);
-                if ($node) {
-                    $tree->addChild($node);
-                }
-            }
-        }
-
-        return $tree;
+        $this->client = $client;
     }
 
-    /**
-     * @return []Node
-     */
-    public function fetchArrayItemsTreeRecursive($ids)
-    {
-        $jsonItems = $this->client->requestItemsAsync($ids);
-
-        $nodes = [];
-        $ids = [];
-        // Check the item is not soft deleted in HackerNews
-        foreach ($jsonItems as $jsonItem) {
-            if (!array_key_exists('deleted', $jsonItem) || !$jsonItem['deleted']) {
-                $node = new Node(new ItemNode($jsonItem));
-
-                if (array_key_exists('kids', $jsonItem)) {
-                    $children = $this->fetchArrayItemsTreeRecursive($jsonItem['kids']);
-                    if ($children) {
-                        $node->setChildren($children);
-                    }
-                }
-                $nodes[] = $node;
-            }
-        }
-
-        return $nodes;
-    }
 
     /**
      * Fetch ItemNodes from HackerNews and compose the tree. I do it in
-     * array to be able to make the necesary requests concurrent,
+     * array to be able to make the necessary requests concurrent,
      * speeding up the process
-     * @param int[], int
-     * @return ItemNode
+     *
+     * @param int[]|int $ids
+     * @return ItemNode[]
      */
     public function fetchArrayItemsTree($ids)
     {
@@ -119,59 +63,93 @@ class ItemMapper
         return $trees;
     }
 
-    private function sliceAndFetch($stories, $numberOfStories, $offset = 0)
+
+    /**
+     * Slice an array of item ids to be able to request that certain
+     * amount of items. This is mainly use to paginate.
+     *
+     * @param int[] $stories
+     * @param int $numberOfItems
+     * @param int $offset
+     * @return ItemNode[]
+     */
+    private function sliceAndFetch($stories, $numberOfItems, $offset = 0)
     {
-        $rootIds = array_slice($stories, $offset, $numberOfStories);
+        $rootIds = array_slice($stories, $offset, $numberOfItems);
         $tree = $this->fetchArrayItemsTree($rootIds);
         return $tree;
     }
 
 
     /**
-     * Fetch ItemNodes from HackerNews and compose the tree. I do it in
-     * array to be able to make the necesary requests concurrent,
-     * speeding up the process
-     * @param int $numberOfStories the number of stories to fetch
-     * @param int $offset the number of stories to offset
-     * @return ItemNode
+     * Fetch top stories
+     *
+     * @param int $numberOfItems the number of items to fetch
+     * @param int $offset the number of items to offset
+     * @return ItemNode[]
      */
-    public function fetchTopStories($numberOfStories, $offset = 0)
+    public function fetchTopStories($numberOfItems, $offset = 0)
     {
         $stories = $this->client->requestTopStories();
-        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+        return $this->sliceAndFetch($stories, $numberOfItems, $offset);
     }
 
-    public function fetchNewestStories($numberOfStories, $offset = 0)
+
+    /**
+     * Fetch top stories
+     *
+     * @param int $numberOfItems the number of items to fetch
+     * @param int $offset the number of items to offset
+     * @return ItemNode[]
+     */
+    public function fetchNewestStories($numberOfItems, $offset = 0)
     {
         $stories = $this->client->requestNewestStories();
-        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+        return $this->sliceAndFetch($stories, $numberOfItems, $offset);
     }
 
 
-    public function fetchBestStories($numberOfStories, $offset = 0)
-    {
-        $stories = $this->client->requestBestStories();
-        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
-    }
 
-
-    public function fetchAskStories($numberOfStories, $offset = 0)
+    /**
+     * Fetch top stories
+     *
+     * @param int $numberOfItems the number of items to fetch
+     * @param int $offset the number of items to offset
+     * @return ItemNode[]
+     */
+    public function fetchAskStories($numberOfItems, $offset = 0)
     {
         $stories = $this->client->requestAskStories();
-        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+        return $this->sliceAndFetch($stories, $numberOfItems, $offset);
     }
 
 
-    public function fetchJobs($numberOfStories, $offset = 0)
+
+    /**
+     * Fetch top stories
+     *
+     * @param int $numberOfItems the number of items to fetch
+     * @param int $offset the number of items to offset
+     * @return ItemNode[]
+     */
+    public function fetchJobs($numberOfItems, $offset = 0)
     {
         $stories = $this->client->requestJobs();
-        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+        return $this->sliceAndFetch($stories, $numberOfItems, $offset);
     }
 
 
-    public function fetchShows($numberOfStories, $offset = 0)
+
+    /**
+     * Fetch shows
+     *
+     * @param int $numberOfItems the number of items to fetch
+     * @param int $offset the number of items to offset
+     * @return ItemNode[]
+     */
+    public function fetchShows($numberOfItems, $offset = 0)
     {
         $stories = $this->client->requestShows();
-        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+        return $this->sliceAndFetch($stories, $numberOfItems, $offset);
     }
 }
