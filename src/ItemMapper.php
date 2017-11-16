@@ -8,9 +8,9 @@ class ItemMapper
 {
     private $client;
 
-    public function __construct($scheme, $host, $apiPath)
+    public function __construct($baseUri)
     {
-        $this->client = new HackerNewsClient($scheme, $host, $apiPath);
+        $this->client = new HackerNewsClient($baseUri);
     }
 
     /**
@@ -119,6 +119,14 @@ class ItemMapper
         return $trees;
     }
 
+    private function sliceAndFetch($stories, $numberOfStories, $offset = 0)
+    {
+        $rootIds = array_slice($stories, $offset, $numberOfStories);
+        $tree = $this->fetchArrayItemsTree($rootIds);
+        return $tree;
+    }
+
+
     /**
      * Fetch ItemNodes from HackerNews and compose the tree. I do it in
      * array to be able to make the necesary requests concurrent,
@@ -127,11 +135,43 @@ class ItemMapper
      * @param int $offset the number of stories to offset
      * @return ItemNode
      */
-    public function fetchNewest($numberOfStories, $offset = 0)
+    public function fetchTopStories($numberOfStories, $offset = 0)
     {
-        $topStories = $this->client->requestTopStories();
-        $rootIds = array_slice($topStories, $offset, $numberOfStories);
-        $tree = $this->fetchArrayItemsTree($rootIds);
-        return $tree;
+        $stories = $this->client->requestTopStories();
+        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+    }
+
+    public function fetchNewestStories($numberOfStories, $offset = 0)
+    {
+        $stories = $this->client->requestNewestStories();
+        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+    }
+
+
+    public function fetchBestStories($numberOfStories, $offset = 0)
+    {
+        $stories = $this->client->requestBestStories();
+        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+    }
+
+
+    public function fetchAskStories($numberOfStories, $offset = 0)
+    {
+        $stories = $this->client->requestAskStories();
+        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+    }
+
+
+    public function fetchJobs($numberOfStories, $offset = 0)
+    {
+        $stories = $this->client->requestJobs();
+        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
+    }
+
+
+    public function fetchShows($numberOfStories, $offset = 0)
+    {
+        $stories = $this->client->requestShows();
+        return $this->sliceAndFetch($stories, $numberOfStories, $offset);
     }
 }

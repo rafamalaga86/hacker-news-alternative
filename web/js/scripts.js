@@ -1,15 +1,5 @@
 $(document).ready(function(){
 
-  // Initialise the Mansonry Grid
-  // =======================================================
-  var $grid = $('.grid').masonry({
-    itemSelector: '.card',
-    fitWidth: true,
-    gutter: 20
-    // columnWidth: 50
-  });
-
-
   // Let's write something in the footer at random
   var jokes = [
     "<p>- What is a programmer's favourite hangout place?</p><p> - Foo Bar</p>",

@@ -47,11 +47,6 @@ class ItemNode
     private $itemType;
 
     /**
-     * @var null|int
-     */
-    private $numberOfComments;
-
-    /**
      * @var ItemNode[]
      */
     private $children = [];
@@ -213,6 +208,15 @@ class ItemNode
         $this->url = $url;
     }
 
+    /**
+     * Get the time in human difference from now
+     * @return Carbon|null
+     */
+    public function getTimeDiffForHumans()
+    {
+        return $this->time->diffForHumans();
+    }
+
     public function getChildren()
     {
         return $this->children;
@@ -221,7 +225,11 @@ class ItemNode
     public function addChild(ItemNode $child)
     {
         $this->children[] = $child;
-        return $this;
+    }
+
+    public function dropChildren(ItemNode $child)
+    {
+        $this->children = [];
     }
 
     public function countNodes()
@@ -231,19 +239,5 @@ class ItemNode
             $count += $child->countNodes();
         }
         return $count;
-    }
-
-    public function nodeToArray()
-    {
-        return [
-            'id'       => $this->getId(),
-            'author'   => $this->getAuthor(),
-            'text'     => $this->getText(),
-            'title'    => $this->getTitle(),
-            'time'     => $this->getTime()->diffForHumans(),
-            'url'      => $this->getUrl(),
-            'score'    => $this->getScore(),
-            'itemType' => $this->getItemType(),
-        ];
     }
 }

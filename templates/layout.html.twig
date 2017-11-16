@@ -18,16 +18,33 @@
   <body>
 
     <div class="navbar">
-      <div class="container d-flex justify-content-end">
-          <a href="/" class="navbar-brand">Hacker News by Rafael</a>
+      <div class="container">
+        <div class="row">
+          <div class="col col-md-5">
+            <a href="/" class="navbar-brand">Hacker News by Rafael</a>
+          </div>
+          <div class="col col-md-7 d-flex justify-content-end">
+            <a href="/newest" class="menu-link">News</a>
+            <a href="/show" class="menu-link">Show</a>
+            <a href="/ask" class="menu-link">Ask</a>
+            <a href="/jobs" class="menu-link">Jobs</a>
+          </div>
+        </div>
       </div>
     </div>
     <main class="container">
       {% block main %}{% endblock %}
     </main>
-    <footer class="text-muted">
+    <footer>
       <div class="container">
-        <p class="footer-joke">Hola k ase</p>
+        <div class="row">
+          <div class="col-sm-4">
+            Visit my personal page: <a href="//rafaelgarciadoblas.com">rafaelgarciadoblas.com</a>
+          </div>
+          <div class="col-sm-8">
+            <p class="footer-joke"><!-- Insert joke with Javascript here--></p>
+          </div>
+        </div>
       </div>
     </footer>
 
@@ -35,10 +52,8 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/masonry.js') }}"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
   </body>
 </html>

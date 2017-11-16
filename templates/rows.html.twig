@@ -1,0 +1,43 @@
+
+{% extends "layout.html.twig" %}
+
+{% block main %}
+  {% if trees %}
+    {% for node in trees %}
+      <div class="row item" data-entry-id="{{ node.id }}">
+        <div class="col col-lg-2 left-box">
+        {% if node.score and node.itemType != 'job'%}
+          <div class="item-score"><span>{{ node.score }}<span></div>
+        {% endif %}
+          <div class="item-author">{{ node.author }}</div>
+        {% if node.url %}
+          <div class="item-link">
+            <a href="{{ node.url }}">Go to the Article</a>
+          </div>
+        {% endif %}
+        </div>
+        <div class="col col-lg-10 item-content">
+          {% if node.title and node.url %}
+            <h3 class="card-title">
+              <a href="{{ node.url }}">{{ node.title}}</a>
+            </h3>
+          {% elseif node.title %}
+            <h3 class="card-title">{{ node.title}}</h3>
+          {% endif %}
+          {% if node.text %}
+            <p class="item-text">{{ node.text|raw }}</p>
+          {% endif %}
+          <small>
+            {% if node.countNodes > 1 %}
+              <a href="/item/{{ node.id }}">Comments: {{ node.countNodes - 1 }}</a>
+            {% endif %}
+            <div>{{ node.timeDiffForHumans }}</div>
+          </small>
+        </div>
+      </div>
+    {% endfor %}
+    <div class="row">
+      <a class="btn btn-primary btn-more" href="/news?p={{ page + 1 }}">More...</a>
+    </div>
+  {% endif %}
+{% endblock %}

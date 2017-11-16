@@ -1,9 +1,10 @@
 <?php
 
 // Hacker news API config
-$app['scheme'] = 'https';
-$app['host'] = 'hacker-news.firebaseio.com';
-$app['apiPath'] = '/v0';
+$app['baseUri'] = 'https://hacker-news.firebaseio.com/v0';
+
+// Ammount of stories (roots) fetched.
+$app['rootsToFech'] = 10;
 
 // configure your app for the production environment
 

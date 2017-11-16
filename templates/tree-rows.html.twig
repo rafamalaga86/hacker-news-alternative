@@ -1,0 +1,43 @@
+{# macro #}
+
+{% macro tree(trees, treeLevel) %}
+  {% import _self as macroTree %}
+  {% if trees %}
+    {% for node in trees %}
+        <div class="row item" data-entry-id="{{ node.id }}" style="margin-left: {{ treeLevel * 20}}px">
+          <div class="col col-sm-2 left-box">
+          {% if node.score %}
+            <div class="item-score"><span>{{ node.score }}<span></div>
+          {% endif %}
+            <div class="item-author">{{ node.author }}</div>
+          {% if node.url %}
+            <div class="item-link">
+              <a href="{{ node.url }}">Go to the Article</a>
+            </div>
+          {% endif %}
+          </div>
+          <div class="col item-content">
+            {% if node.title %}
+              <h3 class="card-title">{{ node.title}}</h3>
+            {% endif %}
+            {% if node.text %}
+              <p class="item-text">{{ node.text|raw }}</p>
+            {% endif %}
+            <div>{{ node.timeDiffForHumans }}</div>
+          </div>
+        </div>
+        {{ macroTree.tree(node.children, treeLevel + 1) }}
+    {% endfor %}
+  {% endif %}
+
+{% endmacro %}
+
+{# usage #}
+
+{% import 'tree-rows.html.twig' as macroTree %}
+{% extends "layout.html.twig" %}
+
+{% set treeLevel = 0 %}
+{% block main %}
+  {{ macroTree.tree(trees, treeLevel) }}
+{% endblock %}

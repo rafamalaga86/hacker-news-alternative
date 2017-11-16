@@ -6,17 +6,15 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Promise;
 
 // This layer is in charge of shaping URLs
-// scheme://host/path?query
-// Following https://en.wikipedia.org/wiki/URL parts
 class HackerNewsClient
 {
     private $genericUrl;
 
     private $httpClient;
 
-    public function __construct($scheme, $host, $apiPath)
+    public function __construct($baseUri)
     {
-        $this->genericUrl = $scheme . '://' . $host . $apiPath;
+        $this->genericUrl = $baseUri;
         $this->httpClient = new HttpClient();
     }
 
@@ -44,9 +42,8 @@ class HackerNewsClient
      * @param $filter200 bool wheather we should filter out only status codes of 200
      *
      */
-    public function requestItemsAsync($itemIds, $filter200 = true)
+    public function requestItemsAsync($itemIds, $filter200 = true, $maxConcurrentRequests = 150)
     {
-        $maxConcurrentRequests = 150;
         $totalResponses = [];
         $offset = 0;
 
@@ -83,6 +80,19 @@ class HackerNewsClient
         return $results;
     }
 
+    private function requestItemTypeIds($finalUrl)
+    {
+        $response = $this->httpClient->get($finalUrl);
+
+        if ($response->getStatusCode() !== 200) {
+            throw Exception(
+                'Failing requesting: ' . $finalUrl . 'Status code: ' . $response->getStatusCode()
+            );
+        }
+
+        return json_decode($response->getBody(), true);
+    }
+
     public function requestMaxItem()
     {
         $finalUrl = $this->buildUrl('maxitem.json');
@@ -101,14 +111,36 @@ class HackerNewsClient
     public function requestTopStories()
     {
         $finalUrl = $this->buildUrl('topstories.json');
-        $response = $this->httpClient->get($finalUrl);
+        return $this->requestItemTypeIds($finalUrl);
+    }
 
-        if ($response->getStatusCode() !== 200) {
-            throw Exception(
-                'Failing requesting: ' . $finalUrl . 'Status code: ' . $response->getStatusCode()
-            );
-        }
+    public function requestNewestStories()
+    {
+        $finalUrl = $this->buildUrl('newstories.json');
+        return $this->requestItemTypeIds($finalUrl);
+    }
 
-        return json_decode($response->getBody(), true);
+    public function requestBestStories()
+    {
+        $finalUrl = $this->buildUrl('beststories.json');
+        return $this->requestItemTypeIds($finalUrl);
+    }
+
+    public function requestAskStories()
+    {
+        $finalUrl = $this->buildUrl('askstories.json');
+        return $this->requestItemTypeIds($finalUrl);
+    }
+
+    public function requestJobs()
+    {
+        $finalUrl = $this->buildUrl('jobstories.json');
+        return $this->requestItemTypeIds($finalUrl);
+    }
+
+    public function requestShows()
+    {
+        $finalUrl = $this->buildUrl('showstories.json');
+        return $this->requestItemTypeIds($finalUrl);
     }
 }

@@ -2,4 +2,7 @@
 /phpunit.xml
 /build
 .DS_Store
-/var
+/var/cache/*
+/var/logs/*
+!/var/cache/.gitignore
+!/var/logs/.gitignore
