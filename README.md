@@ -1,5 +1,5 @@
 
-Once you clone it to your machine, execute it with this `php -S localhost:8000 -t web web/index.php `
+Once you clone it to your machine, make a `composer install` and then execute it with this `php -S localhost:8000 -t web web/index.php `
 
 First of all, I would like to tell you guys that I don't have all the time free that I wish, because I have a 40 hours job and other obligations, and was a challenge to take the hours needed to do this in one week, as you requested. 
 
@@ -28,8 +28,6 @@ I would have love to unit test every class, and I don't work any other way in my
 ### 4. Handle Bootstrap and jQuery with Bower, the package frontend package manager.
 
 I might be forgetting something, but thats basically it. In the same way, if you expected to see anything mention before, just please let me know (and give me some days) and I'd happily do it.
-
-### 5. Trimming dependencies in composer.json: I'd have to check the dependencies that the silex skeleton came with. I am not using most of them.
 
 
 Regarding the HackerNews API, it was a bit tricky requesting information, because many requests needs to be done at the same time. I made that happened as concurrent as I could, but had to limite it a little bit because it was exceding the capacities of the php built-in server. 

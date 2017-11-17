@@ -2,9 +2,6 @@
 
 namespace HackerNewsGTD;
 
-use HackerNewsGTD\HackerNewsClient;
-use HackerNewsGTD\ItemNode;
-
 class ItemMapper
 {
     /**
