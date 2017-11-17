@@ -22,7 +22,8 @@
         "symfony/twig-bridge": "~2.8|^3.0",
         "symfony/validator": "~2.8|^3.0",
         "guzzlehttp/guzzle": "^6.3",
-        "nesbot/carbon": "^1.22"
+        "nesbot/carbon": "^1.22",
+        "phpunit/phpunit": "^6.4"
     },
     "autoload": {
         "psr-0": { "": "src/" }
