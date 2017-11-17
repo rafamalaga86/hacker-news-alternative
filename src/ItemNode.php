@@ -169,7 +169,7 @@ class ItemNode
      */
     public function setTime($time)
     {
-        $this->time = new Carbon($time);
+        $this->time = Carbon::createFromTimestamp($time);
     }
 
 
@@ -185,11 +185,11 @@ class ItemNode
 
     /**
      * Set the score
-     * @param int $score
+     * @param int|string $score
      */
     public function setScore($score)
     {
-        $this->score = (int) $score;
+        $this->score = $score;
     }
 
 
