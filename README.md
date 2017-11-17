@@ -7,7 +7,7 @@ I think I did a good job and tried to show my skills in every part of the projec
 
 # Things I would do with more time
 
-### 1. Better class estructure: I focused my efforts in differentiate layers within the applications to make everything organsise. Each layer has it's responsabilities and intend to be totally separated.
+#### 1. Better class estructure: I focused my efforts in differentiate layers within the applications to make everything organsise. Each layer has it's responsabilities and intend to be totally separated.
 
 controller -> ItemMapper -> HackerNewsClient
 
@@ -15,22 +15,32 @@ However, all the items are ItemNodes. Given some hours more, Id made some more c
 
 Ideally I would like this classes to extend another class Abstract (Node) to give them node functionality to work as a tree. But like in PHP there is no multiple inheritance from classes, I would most likely put that in a Trait.
 
-### 2. Requesting users. I dont have a view for showing a single user. So we cannot click in the user and access the page with a user information. 
+#### 2. Requesting users. I dont have a view for showing a single user. So we cannot click in the user and access the page with a user information. 
 
 I speak of this view: https://news.ycombinator.com/user?id=dchuk
 
 I don't have time enough to do that. I am confident that you know that is probably the easiest part on this (just pass information from end to end), and you can see that given the time I could do that.
 
-### 3. Tests. I did one class test as an example. 
+#### 3. Tests. I did one class test as an example. 
 
 I would have love to unit test every class, and I don't work any other way in my day to day. But my focus in here is I could do this in time showing clean code. Also would have love to do integration testing.
 
-### 4. Handle Bootstrap and jQuery with Bower, the package frontend package manager.
+#### 4. Handle Bootstrap and jQuery with Bower, the package frontend package manager.
 
 I might be forgetting something, but thats basically it. In the same way, if you expected to see anything mention before, just please let me know (and give me some days) and I'd happily do it.
 
 
-Regarding the HackerNews API, it was a bit tricky requesting information, because many requests needs to be done at the same time. I made that happened as concurrent as I could, but had to limite it a little bit because it was exceding the capacities of the php built-in server. 
+## Where I spent most of the time?
+
+Regarding the HackerNews API, it was a bit tricky requesting information, Only for the homepage, some hundreds of requets needs to be done. Normally, those requests would be made in series, would make things incredibly slow.
+
+I tried to do those requests in parallel. That cannot done easily. Because to get the children's children IDs you need first to get the childrens. So I tried to optimise doing each level of the tree concurrent at the same time.
+
+For the last iterations, it happened that I was doing sometimes more than 200 concurrent requests at the same time. The server couldn't handle that.
+
+So I made the requests happens as concurrent as I could, but had to limite it a little bit because it was exceding the capacities of the php built-in server. 
+
+## What other solutions could have been applyed to this challenge
 
 - I had tweak the server, but I am not applying for dev-ops, but a software dev, so I tried to sort the limitations with PHP. 
 
