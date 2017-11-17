@@ -2,6 +2,9 @@
 
 namespace HackerNewsGTD;
 
+use HackerNewsGTD\HackerNewsClient;
+use HackerNewsGTD\ItemNode;
+
 class ItemMapper
 {
     /**
@@ -21,11 +24,11 @@ class ItemMapper
 
     /**
      * Fetch ItemNodes from HackerNews and compose the tree. I do it in
-     * array to be able to make the necessary requests concurrent,
+     * array to be able to make the necesary requests concurrent,
      * speeding up the process
      *
      * @param int[]|int $ids
-     * @return ItemNode[]
+     * @return ItemNode
      */
     public function fetchArrayItemsTree($ids)
     {
@@ -38,7 +41,7 @@ class ItemMapper
             $ids = [];
             foreach ($jsonItems as $jsonItem) {
                 // Check the item is not soft deleted in HackerNews
-                if (!array_key_exists('deleted', $jsonItem) || !$jsonItem['deleted']) {
+                if ($jsonItem && (!array_key_exists('deleted', $jsonItem) || !$jsonItem['deleted'])) {
                     $node = new ItemNode($jsonItem);
                     $nodeReferences[$node->getId()] = $node;
 
@@ -66,12 +69,12 @@ class ItemMapper
 
     /**
      * Slice an array of item ids to be able to request that certain
-     * amount of items. This is mainly use to paginate.
+     * ammount of items. This is mainly use to paginate.
      *
      * @param int[] $stories
-     * @param int $numberOfItems
+     * @param int $numberOfStories
      * @param int $offset
-     * @return ItemNode[]
+     * @return ItemNode
      */
     private function sliceAndFetch($stories, $numberOfItems, $offset = 0)
     {
@@ -84,9 +87,9 @@ class ItemMapper
     /**
      * Fetch top stories
      *
-     * @param int $numberOfItems the number of items to fetch
+     * @param int $numberOfStories the number of items to fetch
      * @param int $offset the number of items to offset
-     * @return ItemNode[]
+     * @return ItemNode
      */
     public function fetchTopStories($numberOfItems, $offset = 0)
     {
@@ -98,9 +101,9 @@ class ItemMapper
     /**
      * Fetch top stories
      *
-     * @param int $numberOfItems the number of items to fetch
+     * @param int $numberOfStories the number of items to fetch
      * @param int $offset the number of items to offset
-     * @return ItemNode[]
+     * @return ItemNode
      */
     public function fetchNewestStories($numberOfItems, $offset = 0)
     {
@@ -113,9 +116,24 @@ class ItemMapper
     /**
      * Fetch top stories
      *
-     * @param int $numberOfItems the number of items to fetch
+     * @param int $numberOfStories the number of items to fetch
      * @param int $offset the number of items to offset
-     * @return ItemNode[]
+     * @return ItemNode
+     */
+    public function fetchBestStories($numberOfItems, $offset = 0)
+    {
+        $stories = $this->client->requestBestStories();
+        return $this->sliceAndFetch($stories, $numberOfItems, $offset);
+    }
+
+
+
+    /**
+     * Fetch top stories
+     *
+     * @param int $numberOfStories the number of items to fetch
+     * @param int $offset the number of items to offset
+     * @return ItemNode
      */
     public function fetchAskStories($numberOfItems, $offset = 0)
     {
@@ -128,9 +146,9 @@ class ItemMapper
     /**
      * Fetch top stories
      *
-     * @param int $numberOfItems the number of items to fetch
+     * @param int $numberOfStories the number of items to fetch
      * @param int $offset the number of items to offset
-     * @return ItemNode[]
+     * @return ItemNode
      */
     public function fetchJobs($numberOfItems, $offset = 0)
     {
@@ -143,9 +161,9 @@ class ItemMapper
     /**
      * Fetch shows
      *
-     * @param int $numberOfItems the number of items to fetch
+     * @param int $numberOfStories the number of items to fetch
      * @param int $offset the number of items to offset
-     * @return ItemNode[]
+     * @return ItemNode
      */
     public function fetchShows($numberOfItems, $offset = 0)
     {

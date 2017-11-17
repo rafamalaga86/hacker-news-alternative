@@ -21,11 +21,15 @@ I speak of this view: https://news.ycombinator.com/user?id=dchuk
 
 I don't have time enough to do that. I am confident that you know that is probably the easiest part on this (just pass information from end to end), and you can see that given the time I could do that.
 
-### 3. Tests. I did one class test as an example. I would have love to unit test every class, and I don't work any other way in my day to day. But my focus in here is I could do this in time showing clean code. Also would have love to do integration testing.
+### 3. Tests. I did one class test as an example. 
+
+I would have love to unit test every class, and I don't work any other way in my day to day. But my focus in here is I could do this in time showing clean code. Also would have love to do integration testing.
 
 ### 4. Handle Bootstrap and jQuery with Bower, the package frontend package manager.
 
 I might be forgetting something, but thats basically it. In the same way, if you expected to see anything mention before, just please let me know (and give me some days) and I'd happily do it.
+
+### 5. Trimming dependencies in composer.json: I'd have to check the dependencies that the silex skeleton came with. I am not using most of them.
 
 
 Regarding the HackerNews API, it was a bit tricky requesting information, because many requests needs to be done at the same time. I made that happened as concurrent as I could, but had to limite it a little bit because it was exceding the capacities of the php built-in server. 
@@ -39,6 +43,8 @@ Regarding the HackerNews API, it was a bit tricky requesting information, becaus
 Also I have experienced the Hacker News Api not accepting requests if I tried to do to many concurrent requests. So the page is a little bit slow, but not much.
 
 It works internally with items as trees.
+
+To pass the unit tests, just run phpunit in the root folder.
 
 Thanks, any doubt, please contact me.
 
